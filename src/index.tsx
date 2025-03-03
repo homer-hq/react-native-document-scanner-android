@@ -55,18 +55,16 @@ const DocumentScannerAndroid: React.FC<ScannerProps> = ({
   ...restProps
 }) => {
   useEffect(() => {
-    if (onPictureTaken)
-      DeviceEventEmitter.addListener('onPictureTaken', onPictureTaken);
-
-    if (onProcessing)
-      DeviceEventEmitter.addListener('onProcessingChange', onProcessing);
+    const pictureListener = onPictureTaken
+      ? DeviceEventEmitter.addListener('onPictureTaken', onPictureTaken)
+      : null;
+    const processingListener = onProcessing
+      ? DeviceEventEmitter.addListener('onProcessingChange', onProcessing)
+      : null;
 
     return () => {
-      if (onPictureTaken)
-        DeviceEventEmitter.removeListener('onPictureTaken', onPictureTaken);
-
-      if (onProcessing)
-        DeviceEventEmitter.removeListener('onProcessingChange', onProcessing);
+      pictureListener?.remove();
+      processingListener?.remove();
     };
   }, [onPictureTaken, onProcessing]);
 
